@@ -1,0 +1,50 @@
+spring:
+  application:
+    name: GATEWAY-SERVICE
+  cloud:
+    gateway:
+      routes:
+        - id: management-service # given any Id, better be the same name of the services to be implemented
+          uri: lb://MANAGEMENT-SERVICE # The destination URI of the route
+          predicates: # The collection of predicates applied for the route such as Path
+            - Path=/api/v1/products/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: management-service
+                fallbackuri: forward:/managementFallBack
+
+        - id: company-service
+          uri: lb://COMPANY-SERVICE
+          predicates:
+            - Path=/api/v1/companies/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: company-service
+                fallbackuri: forward:/companyFallBack
+server:
+  port: 8082
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    hostname: localhost
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: hystrix.stream
+
+hystrix:
+  command:
+    fallbackcmd:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 5000
