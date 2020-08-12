@@ -4,7 +4,7 @@ spring:
   cloud:
     gateway:
       routes:
-        - id: management-service # given any Id, better be the same name of the services to be implemented
+        - id: management-service # given any Id, better be the same name of the service to be implemented
           uri: lb://MANAGEMENT-SERVICE # The destination URI of the route
           predicates: # The collection of predicates applied for the route such as Path
             - Path=/api/v1/products/**
@@ -13,7 +13,7 @@ spring:
               args:
                 name: management-service
                 fallbackuri: forward:/managementFallBack
-##
+
         - id: company-service
           uri: lb://COMPANY-SERVICE
           predicates:

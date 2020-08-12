@@ -1,17 +1,23 @@
 package com.exalt.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import reactor.core.publisher.Mono;
 
 @RestController
 public class FallbackController {
+    private Logger logger = LoggerFactory.getLogger(FallbackController.class);
+
     @RequestMapping("/companyFallBack")
-    public Mono<String> companyServiceFallBack(){
-        return Mono.just("Company service down, try again later");
+    public String companyServiceFallBack() {
+        logger.info("companyServiceFallBack");
+        return ("Company service is down, try again later ");
     }
+
     @RequestMapping("/managementFallBack")
-    public Mono<String> managementServiceFallBack(){
-        return Mono.just("management system service down, try again later");
+    public String managementServiceFallBack() {
+        logger.info("managementServiceFallBack");
+        return ("management system service is down, try again later");
     }
 }
